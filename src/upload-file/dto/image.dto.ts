@@ -8,12 +8,4 @@ export class ImageDto {
     @IsEnum(Media_Type)
     type: Media_Type;
 
-    // @IsObject()
-    // size: {
-    //     @IsNumber()
-    //     width: number;
-
-    //     @IsNumber()
-    //     height: number;
-    // };
 }

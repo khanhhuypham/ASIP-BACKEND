@@ -17,6 +17,8 @@ import { UploadFileModule } from './upload-file/upload-file.module';
 import { AreaModule } from './area/area.module';
 import { PriceModule } from './price/price.module';
 import { GuestGroupModule } from './guest-group/guest-group.module';
+import { HotelModule } from './hotel/hotel.module';
+import { BranchModule } from './branch/branch.module';
 
 
 
@@ -35,6 +37,8 @@ import { GuestGroupModule } from './guest-group/guest-group.module';
         AreaModule,
         PriceModule,
         GuestGroupModule,
+        HotelModule,
+        BranchModule,
     ],
     controllers: [AppController],
     providers: [

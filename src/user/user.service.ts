@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { _2FASecret } from 'src/auth/dto/_2FASecrete';
 
 
 @Injectable()
@@ -59,7 +60,7 @@ export class UserService {
         return newUser;
     }
 
-    async updateUser2FASecret(userId:number, _2FASecret: string) {
+    async updateUser2FASecret(userId:number, _2FASecret: _2FASecret) {
         const existingUser = await this.findOneById(userId)
 
         if (!existingUser) {

@@ -1,24 +1,25 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { _2FASecret } from "src/auth/dto/_2FASecrete";
+import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
 
 @Entity('user')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
-  
+
     @Column()
     name: string;
 
     @Column({ unique: true })
     username: string;
-  
+
     @Column({ unique: true })
     email: string;
-  
+
     @Column()
     password: string;
 
-  
-    @Column({ nullable: true }) // Store the secret key when 2FA is enabled
-    _2FASecret: string;
+
+    @Column('json', { nullable: true })  // Marked as nullable, meaning _2FASecret can be null.
+    _2FASecret: _2FASecret; // Marked as nullable, meaning _2FASecret can be null.
 }

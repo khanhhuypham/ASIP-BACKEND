@@ -1,3 +1,4 @@
+
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -24,13 +25,13 @@ export class AuthService {
             throw new BadRequestException('email already exists');
         }
 
-    
+
         const hashedPassword = await bcrypt.hash(dto.password, 10);
 
         const user = await this.userService.createUser({
-            username:dto.username,
-            name:dto.name,
-            email:dto.email,
+            username: dto.username,
+            name: dto.name,
+            email: dto.email,
             password: hashedPassword
         })
 
@@ -41,15 +42,15 @@ export class AuthService {
         return { token };
     }
 
-    async login(dto: LoginDto){
+    async signIn(dto: LoginDto) {
         const { username, password } = dto;
 
 
         const user = await this.userService.findOneByUserName(username);
-
+        
         if (!user) {
             throw new UnauthorizedException('Invalid email or password');
-        
+
         }
 
         const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -58,12 +59,18 @@ export class AuthService {
             throw new UnauthorizedException('Invalid email or password');
         }
 
-        const { secret, QR_Code } = await this._2FA_AuthService.generateSecret(user);
 
-        return {
-            secret: secret,    
-            QR_Code:QR_Code
-        };
+        if (!user._2FASecret) {
+           
+            return await this._2FA_AuthService.generateSecret(user.id);
+        }else{
+
+            return {
+                QR_Code:user._2FASecret.QR_Code,
+                secret:user._2FASecret.secret, 
+                user_id:user.id
+            }
+        }
     }
 
 
@@ -79,6 +86,8 @@ export class AuthService {
         return user;
     }
 
+
+    
 
 
 }

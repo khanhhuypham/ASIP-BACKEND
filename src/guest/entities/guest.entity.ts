@@ -48,7 +48,6 @@ export class Guest {
     // ✅ Format DOB as "dd/MM/yyyy" when returning the response
     @Transform(({ value }) => {
         if (!value) return null;
-        console.log(convertDateToString(value, DATE_FORMAT.DDMMYYY))
         return convertDateToString(value, DATE_FORMAT.DDMMYYY);
     })
     DOB: Date;

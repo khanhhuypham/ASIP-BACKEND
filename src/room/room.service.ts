@@ -27,7 +27,7 @@ export class RoomService {
         let equipments: Equipment[] = []
         const area = await this.areaService.findOne(dto.area_id);
 
-        console.log(roomType)
+     
         if (!roomType) {
             throw new NotFoundException(`Room_Type with id ${dto.room_type_id} not found`);
         }

@@ -1,3 +1,4 @@
+
 import { GoogleAuthService } from './google-auth.service';
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -22,16 +23,20 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     @Post('/admin/sign-in')
     signIn(@Body() dto: LoginDto) {
-        return this.authService.login(dto);
+        return this.authService.signIn(dto);
     }
 
+    @Post('/admin/generate-2fa')
+    async generateTwoFactorAuthSecret(@Body() body: { user_id: number }) {
+        return await this._2FA_AuthService.generateSecret(body.user_id);
+    }
 
     @Post('/admin/verify-otp')
-    verify(@Body() body: { 
-        username:string;
+    verify(@Body() body: {
+        username: string;
         otp: string;
     }) {
-      return this._2FA_AuthService.verifyToken(body.username, body.otp);
+        return this._2FA_AuthService.verifyToken(body.username, body.otp);
     }
 
 }

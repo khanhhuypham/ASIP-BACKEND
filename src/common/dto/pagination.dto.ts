@@ -31,21 +31,24 @@ export class PaginationDto {
 
 
 
-
-
-
-export class PaginationResult<T> {
+export class PaginationResult<T,P = any> {
     list: T[];
     total_record: number;
     page: number;
     limit: number;
+    statistic:P
 
-    constructor(data: Partial<PaginationResult<T>>) {
+    constructor(data: Partial<PaginationResult<T>>,statistic?: P) {
         // Validate and set defaults
         this.list = data.list ?? [];
         this.total_record = data.total_record ?? 0;
         this.page = Math.abs(data.page ?? DEFAULT_CURSOR);
         this.limit = Math.abs(data.limit ?? DEFAULT_OFFSET);
+
+        if (statistic){
+            this.statistic = statistic
+        }
+        
     }
 
 }
