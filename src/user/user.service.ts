@@ -11,9 +11,9 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepo: Repository<User>,
-      ) {}
+    ) { }
 
-    async findAll():Promise<User[]> {
+    async findAll(): Promise<User[]> {
         const users = this.userRepo.find().then((list) => Promise.all(list.map(
             async (user) => {
                 delete user.password
@@ -24,7 +24,7 @@ export class UserService {
         return users;
     }
 
-    async findOneById(id: number): Promise<User | null>  {
+    async findOneById(id: number): Promise<User | null> {
         const user = await this.userRepo.findOne({
             where: {
                 id: id,
@@ -36,7 +36,7 @@ export class UserService {
         return user;
     }
 
-    async findOneByUserName(username: string): Promise<User | null>  {
+    async findOneByUserName(username: string): Promise<User | null> {
         const user = await this.userRepo.findOne({
             where: {
                 username: username,
@@ -50,17 +50,17 @@ export class UserService {
 
     async createUser(dto: CreateUserDto) {
         const newUser = await this.userRepo.create(dto);
-        
+
         await this.userRepo.save({
             name: dto.name,
-            username:dto.username,
+            username: dto.username,
             email: dto.email,
             password: dto.password
         });
         return newUser;
     }
 
-    async updateUser2FASecret(userId:number, _2FASecret: _2FASecret) {
+    async updateUser2FASecret(userId: number, _2FASecret: _2FASecret) {
         const existingUser = await this.findOneById(userId)
 
         if (!existingUser) {
@@ -72,7 +72,7 @@ export class UserService {
         existingUser._2FASecret = _2FASecret
         await this.userRepo.save(existingUser);
 
-    
+
     }
 
     async deleteById(id: number) {

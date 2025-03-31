@@ -19,7 +19,8 @@ export class User {
     @Column()
     password: string;
 
-
     @Column('json', { nullable: true })  // Marked as nullable, meaning _2FASecret can be null.
     _2FASecret: _2FASecret; // Marked as nullable, meaning _2FASecret can be null.
+    
+    
 }
