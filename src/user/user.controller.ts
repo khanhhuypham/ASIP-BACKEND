@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
+import { UserQueryDTO, UserStatistics } from './dto/user-query.dto';
+import { PaginationResult } from 'src/common/dto/pagination.dto';
+import { Hotel } from 'src/hotel/entities/hotel.entity';
 
 @Controller('user')
 export class UserController {
@@ -15,8 +18,8 @@ export class UserController {
     }
 
     @Get()
-    findAll():Promise<User[]> {
-        return this.userService.findAll();
+    findAll(@Query() query?:UserQueryDTO):Promise<PaginationResult<User,UserStatistics>> {
+        return this.userService.findAll(query);
     }
 
     @Get(':id')

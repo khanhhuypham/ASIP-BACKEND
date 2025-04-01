@@ -15,7 +15,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             // timezone: '+07:00',
             // dateStrings: true,
             // multipleStatements: true,
-            
+            logging:true,
+            // logger: 'advanced-console', // Log query output to the console in a more readable format
             autoLoadEntities: true, // Automatically load models
             synchronize: true,
         };

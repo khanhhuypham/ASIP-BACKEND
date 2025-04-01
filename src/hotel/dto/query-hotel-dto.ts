@@ -12,5 +12,5 @@ export interface HotelStatistics {
     total: number;
     total_active: number;
     total_inactive: number;
-  }
+}
   

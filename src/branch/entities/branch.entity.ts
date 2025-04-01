@@ -1,6 +1,7 @@
 import { Hotel } from "src/hotel/entities/hotel.entity";
 import { ImageDto } from "src/upload-file/dto/image.dto";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/entities/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("branch")
 export class Branch {
@@ -21,7 +22,7 @@ export class Branch {
     @Column({ type: "text" })
     phone: string;
 
-    
+
     @Column({
         type: "boolean",
         default: true, // Optional: set default value
@@ -43,7 +44,12 @@ export class Branch {
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     updated_at: Date;
 
-    @ManyToOne(() => Branch, (branch) => branch.hotel, { onDelete: 'SET NULL' })
+    @ManyToOne(() => Hotel, (hotel) => hotel.branches,{ onDelete: 'SET NULL' })
     @JoinColumn({ name: 'hotel_id' })
     hotel: Hotel;
+
+
+    @OneToMany(() => User, (user) => user.branch)
+    users: User[];
+
 }

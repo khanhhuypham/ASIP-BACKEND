@@ -18,3 +18,9 @@ export class UserQueryDTO extends PaginationDto{
     @IsBoolean()
     active: boolean;
 }
+
+export interface UserStatistics {
+    total: number;
+    total_active: number;
+    total_inactive: number;
+  }

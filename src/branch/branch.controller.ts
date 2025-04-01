@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { BranchService } from './branch.service';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
+import { QueryBranchDTO } from './dto/branch-query-dto';
 
 @Controller('branch')
 export class BranchController {
@@ -13,10 +14,8 @@ export class BranchController {
     }
 
     @Get()
-    findAll(@Query() query?:{
-        hotel_id:number
-    }) {
-        return this.branchService.findAll();
+    findAll(@Query() query?:QueryBranchDTO) {
+        return this.branchService.findAll(query);
     }
 
     @Get(':id')

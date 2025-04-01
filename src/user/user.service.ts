@@ -4,6 +4,9 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { _2FASecret } from 'src/auth/dto/_2FASecrete';
+import { PaginationResult } from 'src/common/dto/pagination.dto';
+import { UserQueryDTO, UserStatistics } from './dto/user-query.dto';
+import { plainToClass } from 'class-transformer';
 
 
 @Injectable()
@@ -13,15 +16,37 @@ export class UserService {
         private userRepo: Repository<User>,
     ) { }
 
-    async findAll(): Promise<User[]> {
-        const users = this.userRepo.find().then((list) => Promise.all(list.map(
-            async (user) => {
-                delete user.password
-                return user
-            })
-        ));
+    async findAll(query?: UserQueryDTO): Promise<PaginationResult<User, UserStatistics>> {
+        
+        // Fetch the users with pagination
+        const [users, total] = await this.userRepo
+            .createQueryBuilder('user')
+            .innerJoin('user.branch', 'branch') // Join the Branch table
+            .innerJoin('branch.hotel', 'hotel') // Join the Hotel table
+            .where('hotel.id = :hotelId', { hotelId: query.hotel_id }) // Filter by hotel_id
+            .andWhere('branch.id = :branchId', { branchId: query.branch_id }) // Filter by branch_id
+            .skip((query.page - 1) * query.limit) // Skip records based on page and limit
+            .take(query.limit) // Limit the number of records per page
+            .getManyAndCount(); // Fetch the users and total count
 
-        return users;
+        // Transform the raw database results to properly apply the @Transform decorators
+        const transformedList = plainToClass(User, users, { excludeExtraneousValues: false });
+
+        // Calculate statistics (active vs inactive users)
+        const total_active = users.filter((user) => user.active).length;
+        const total_inactive = users.filter((user) => !user.active).length;
+
+        // Return paginated results with statistics
+        return new PaginationResult<User, UserStatistics>({
+            list: transformedList,
+            total_record: total,
+            page:query.page,
+            limit:query.limit,
+        }, {
+            total,
+            total_active,
+            total_inactive,
+        });
     }
 
     async findOneById(id: number): Promise<User | null> {

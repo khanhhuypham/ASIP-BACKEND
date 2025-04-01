@@ -3,9 +3,9 @@ import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
 import { Branch } from './entities/branch.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Like, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { promises } from 'dns';
+import { QueryBranchDTO } from './dto/branch-query-dto';
 
 @Injectable()
 export class BranchService {
@@ -29,24 +29,33 @@ export class BranchService {
         return plainToClass(Branch, branch, { excludeExtraneousValues: false });
     }
 
-    async findAll(hotel_id?: number) {
-        if (hotel_id) {
-            return await this.branchRepo.find({
-                where: {
-                    hotel: { id: hotel_id } // Note the nested syntax for relations
-                },
-                relations: {
-                    hotel: true
-                }
-            })
-        } else {
-            return await this.branchRepo.find({
-                relations: {
-                    hotel: true
-                }
-            })
+    async findAll(query?:QueryBranchDTO) {
+        const queryBuilder = this.branchRepo.createQueryBuilder('branch');
+    
+        // Filter by hotel_id if provided
+        if (query?.hotel_id) {
+            queryBuilder.andWhere('branch.hotel.id = :hotel_id', { hotel_id: query.hotel_id });
         }
 
+        
+    
+        // Filter by search_key if provided
+        if (query?.search_key) {
+            queryBuilder.andWhere(
+                new Brackets(qb => {
+                    qb.where('branch.name LIKE :search_key', { search_key: `%${query.search_key}%` })
+                      .orWhere('branch.address LIKE :search_key', { search_key: `%${query.search_key}%` })
+                      .orWhere('hotel.name LIKE :search_key', { search_key: `%${query.search_key}%` });
+                })
+            );
+        }
+
+        // Include hotel relation
+        queryBuilder.leftJoinAndSelect('branch.hotel', 'hotel');
+    
+    
+        // Execute the query and return results
+        return await queryBuilder.getMany();
     }
 
     async findOne(id: number): Promise<Branch | null> {
