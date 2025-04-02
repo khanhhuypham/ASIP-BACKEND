@@ -30,7 +30,7 @@ export class BranchController {
 
     @Get('/:id/change-status')
     changeStatus(@Param('id') id: string) {
-        return this.branchService.changeStatus(+id);
+        return this.branchService.toggleActive(+id);
     }
 
   

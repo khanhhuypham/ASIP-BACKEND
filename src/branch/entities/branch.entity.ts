@@ -1,7 +1,7 @@
 import { Hotel } from "src/hotel/entities/hotel.entity";
 import { ImageDto } from "src/upload-file/dto/image.dto";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity("branch")
 export class Branch {
@@ -9,9 +9,11 @@ export class Branch {
     id: number;
 
     @Column({ unique: true })
+    @Unique("UQ_branch_name", ["name"]) //// define constrainst name from db platform
     name: string;
 
     @Column({ unique: true, nullable: true })
+    @Unique("UQ_branch_email", ["email"]) // define constrainst name from db platform
     email: string;
 
 

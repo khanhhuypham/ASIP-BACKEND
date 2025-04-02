@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Hotel } from 'src/hotel/entities/hotel.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Branch])],
+    imports: [TypeOrmModule.forFeature([Branch,Hotel])],
     controllers: [BranchController],
     providers: [BranchService],
     exports: [BranchService]

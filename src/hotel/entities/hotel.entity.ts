@@ -3,7 +3,7 @@ import { Branch } from "src/branch/entities/branch.entity";
 import { DATE_FORMAT } from "src/common/constant/constant";
 import { convertDateToString } from "src/common/util/time-util";
 import { ImageDto } from "src/upload-file/dto/image.dto";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity("hotel")
 export class Hotel {
@@ -11,10 +11,16 @@ export class Hotel {
     id: number;
 
     @Column({ unique: true })
+    @Unique("UQ_hotel_code", ["code"])
     code: string;
 
     @Column({ unique: true })
+    @Unique("UQ_hotel_name", ["name"])
     name: string;
+
+    @Column({ unique: true, nullable: true })
+    @Unique("UQ_hotel_email", ["email"])
+    email: string;
 
     @Column()
     owner_name: string;
@@ -22,8 +28,7 @@ export class Hotel {
     @Column({ type: "json", nullable: true })
     image: ImageDto;
 
-    @Column({ unique: true, nullable: true })
-    email: string;
+
 
     @Column({
         type: "boolean",

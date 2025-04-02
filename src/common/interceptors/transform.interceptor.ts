@@ -42,7 +42,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         response.status(status).json({
             status: status,
             message: exception.message || 'Internal server error',
-            // message:message,
             data: null,
         });
     }

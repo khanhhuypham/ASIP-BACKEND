@@ -8,6 +8,6 @@ import { BranchModule } from 'src/branch/branch.module';
 @Module({
     imports: [TypeOrmModule.forFeature([Hotel]),BranchModule],
     controllers: [HotelController],
-    providers: [HotelService],
+    providers: [HotelService]
 })
 export class HotelModule { }
