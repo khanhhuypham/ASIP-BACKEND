@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsBoolean, IsNumber, IsOptional } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 import { PaginationDto } from "src/common/dto/pagination.dto";
 
 export class UserQueryDTO extends PaginationDto{
@@ -17,6 +17,7 @@ export class UserQueryDTO extends PaginationDto{
     @Transform(({ value }) => Boolean(value))
     @IsBoolean()
     active: boolean;
+
 }
 
 export interface UserStatistics {

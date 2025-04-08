@@ -1,3 +1,6 @@
+import { Transform } from "class-transformer";
+import { DATE_FORMAT } from "src/common/constant/constant";
+import { convertDateToString } from "src/common/util/time-util";
 import { Hotel } from "src/hotel/entities/hotel.entity";
 import { ImageDto } from "src/upload-file/dto/image.dto";
 import { User } from "src/user/entities/user.entity";
@@ -40,13 +43,21 @@ export class Branch {
 
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @Transform(({ value }) => {
+        if (!value) return null;
+        return convertDateToString(value, DATE_FORMAT.DDMMYYY_HHmm);
+    })
     created_at: Date;
 
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @Transform(({ value }) => {
+        if (!value) return null;
+        return convertDateToString(value, DATE_FORMAT.DDMMYYY_HHmm);
+    })
     updated_at: Date;
 
-    @ManyToOne(() => Hotel, (hotel) => hotel.branches,{ onDelete: 'SET NULL' })
+    @ManyToOne(() => Hotel, (hotel) => hotel.branches, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'hotel_id' })
     hotel: Hotel;
 

@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { UserQueryDTO, UserStatistics } from './dto/user-query.dto';
 import { PaginationResult } from 'src/common/dto/pagination.dto';
 import { Hotel } from 'src/hotel/entities/hotel.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -18,7 +19,7 @@ export class UserController {
     }
 
     @Get()
-    findAll(@Query() query?:UserQueryDTO):Promise<PaginationResult<User,UserStatistics>> {
+    findAll(@Query() query?: UserQueryDTO): Promise<PaginationResult<User, UserStatistics>> {
         return this.userService.findAll(query);
     }
 
@@ -27,6 +28,11 @@ export class UserController {
         return this.userService.findOneById(+id);
     }
 
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+        // return this.userService.update(+id, dto);
+    }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
